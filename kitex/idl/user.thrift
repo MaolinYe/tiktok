@@ -42,7 +42,6 @@ struct User {
 
 struct UserInfoRequest {
   1: i64 user_id,
-  2: string token
 }
 
 struct UserInfoResponse {
