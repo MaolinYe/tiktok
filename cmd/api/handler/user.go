@@ -19,8 +19,9 @@ var (
 )
 
 func InitUser() {
+	etcd_address := Config.GetString("etcd.address")
 	// 服务发现
-	resolver, err := etcd.NewEtcdResolver([]string{"127.0.0.1:2379"})
+	resolver, err := etcd.NewEtcdResolver([]string{etcd_address})
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -124,7 +125,7 @@ func Login(ctx context.Context, c *app.RequestContext) {
 // UserInfo 用户信息
 func UserInfo(ctx context.Context, c *app.RequestContext) {
 	userId := c.Query("user_id")
-	log.Println("userInfo", userId)
+	log.Println("userInfo id", userId)
 	id, err := strconv.ParseInt(userId, 10, 64)
 	if err != nil {
 		c.JSON(http.StatusOK, response.UserInfo{

@@ -1,0 +1,34 @@
+api:
+  address: 0.0.0.0:8888
+
+etcd:
+  address: 127.0.0.1:2379
+
+minio:
+  endpoint: 172.29.22.103:9000
+  accessKey: miniokey
+  secretKey: miniokey
+  useSSL: false
+  videoBucketName: tiktok-videos
+  coverBucketName: tiktok-video-covers
+  avatarBucketName: tiktok-user-avatars
+  backgroundBucketName: tiktok-user-backgrounds
+  expireTime: 3600 # 临时链接过期秒数
+
+mysql:
+  source:
+    username : root
+    password : root
+    host : localhost
+    port : 3306
+    dbname : tiktok
+  replica:
+    username : root
+    password : root
+    host : localhost
+    port : 3308
+    dbname : tiktok
+
+service:
+  user:
+    address: 127.0.0.1:9001

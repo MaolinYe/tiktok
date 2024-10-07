@@ -6,19 +6,25 @@ import (
 	"tiktok/cmd/api/handler"
 	"tiktok/pkg/jwt"
 	"tiktok/pkg/logger"
+	"tiktok/pkg/viper"
 
 	"github.com/cloudwego/hertz/pkg/app/server"
 )
 
+func init() {
+	logger.InitLogger()
+}
+
 func main() {
-	hz := server.New(server.WithHostPorts("localhost:8888"))
+	config := viper.InitConfig()
+	api_address := config.GetString("api.address")
+	hz := server.New(server.WithHostPorts(api_address))
+	registerGroup(hz)
 	if err := hz.Run(); err != nil {
 		log.Fatal(err)
 	}
 }
-func init() {
-	logger.InitLogger()
-}
+
 func registerGroup(hz *server.Hertz) {
 	douyin := hz.Group("/douyin")
 	{
