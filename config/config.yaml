@@ -1,11 +1,12 @@
 api:
   address: 0.0.0.0:8888
+  maxRequestBodySize: 128*1024*1024
 
 etcd:
   address: 127.0.0.1:2379
 
 minio:
-  endpoint: 172.29.22.103:9000
+  endpoint: 172.24.204.230:9000
   accessKey: miniokey
   secretKey: miniokey
   useSSL: false
@@ -17,18 +18,21 @@ minio:
 
 mysql:
   source:
-    username : root
-    password : root
-    host : localhost
-    port : 3306
-    dbname : tiktok
+    username: root
+    password: root
+    host: localhost
+    port: 3306
+    dbname: tiktok
   replica:
-    username : root
-    password : root
-    host : localhost
-    port : 3308
-    dbname : tiktok
+    username: root
+    password: root
+    host: localhost
+    port: 3308
+    dbname: tiktok
 
 service:
   user:
     address: 127.0.0.1:9001
+  video:
+    address: 127.0.0.1:9002
+    limit: 2 # 每次feed的视频数量

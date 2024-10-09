@@ -30,7 +30,8 @@ struct FeedResponse {
 // 视频投稿
 struct PublishActionRequest {
   1: binary data,  // 在 Thrift 中使用 binary 表示 bytes
-  2: string title
+  2: string title,
+  3: string user_name
 }
 
 struct PublishActionResponse {

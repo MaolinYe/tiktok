@@ -2,8 +2,6 @@ package main
 
 import (
 	"context"
-	"log"
-
 	"golang.org/x/crypto/bcrypt"
 	"tiktok/dal/db"
 	"tiktok/kitex/kitex_gen/user"
@@ -16,45 +14,42 @@ type UserServiceImpl struct{}
 
 // Register implements the UserServiceImpl interface.
 func (s *UserServiceImpl) Register(ctx context.Context, req *user.UserRegisterRequest) (resp *user.UserRegisterResponse, err error) {
-	log.Println("registering...")
+	logger.Println("registering...")
 	// 检查用户名是否冲突
 	usr, err := db.GetUserByUsername(ctx, req.Username)
 	if err != nil {
-		log.Println(err)
 		resp = &user.UserRegisterResponse{
 			StatusCode: -1,
 			StatusMsg:  "服务器错误",
 		}
-		log.Println(resp.StatusMsg, err)
+		logger.Println(resp.StatusMsg, err)
 		return resp, nil
 	} else if usr != nil {
 		resp = &user.UserRegisterResponse{
 			StatusCode: -1,
 			StatusMsg:  "用户名已存在",
 		}
-		log.Println(resp.StatusMsg)
+		logger.Println(resp.StatusMsg)
 		return resp, nil
 	}
 	// 生成token
 	token, err := jwt.GenerateJWT(req.Username)
 	if err != nil {
-		log.Println(err)
 		resp = &user.UserRegisterResponse{
 			StatusCode: -1,
 			StatusMsg:  "服务器错误",
 		}
-		log.Println(resp.StatusMsg, err)
+		logger.Println(resp.StatusMsg, err)
 		return resp, nil
 	}
 	// 哈希密码
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(req.Password), bcrypt.DefaultCost)
 	if err != nil {
-		log.Println(err)
 		resp = &user.UserRegisterResponse{
 			StatusCode: -1,
 			StatusMsg:  "服务器错误",
 		}
-		log.Println(resp.StatusMsg, err)
+		logger.Println(resp.StatusMsg, err)
 		return resp, nil
 	}
 	// 创建用户
@@ -63,12 +58,11 @@ func (s *UserServiceImpl) Register(ctx context.Context, req *user.UserRegisterRe
 		Password: string(hashedPassword),
 	}
 	if err = db.CreateUser(ctx, usr); err != nil {
-		log.Println(err)
 		resp = &user.UserRegisterResponse{
 			StatusCode: -1,
 			StatusMsg:  "服务器错误",
 		}
-		log.Println(resp.StatusMsg, err)
+		logger.Println(resp.StatusMsg, err)
 		return resp, nil
 	}
 	resp = &user.UserRegisterResponse{
@@ -82,23 +76,22 @@ func (s *UserServiceImpl) Register(ctx context.Context, req *user.UserRegisterRe
 
 // Login implements the UserServiceImpl interface.
 func (s *UserServiceImpl) Login(ctx context.Context, req *user.UserLoginRequest) (resp *user.UserLoginResponse, err error) {
-	log.Println("loginning...")
+	logger.Println("loginning...")
 	// 检查用户是否存在
 	usr, err := db.GetUserByUsername(ctx, req.Username)
 	if err != nil {
-		log.Println(err)
 		resp = &user.UserLoginResponse{
 			StatusCode: -1,
 			StatusMsg:  "服务器错误",
 		}
-		log.Println(resp.StatusMsg, err)
+		logger.Println(resp.StatusMsg, err)
 		return resp, nil
 	} else if usr == nil {
 		resp = &user.UserLoginResponse{
 			StatusCode: -1,
 			StatusMsg:  "用户不存在",
 		}
-		log.Println(resp.StatusMsg)
+		logger.Println(resp.StatusMsg)
 		return resp, nil
 	}
 	// 匹配密码
@@ -107,18 +100,17 @@ func (s *UserServiceImpl) Login(ctx context.Context, req *user.UserLoginRequest)
 			StatusCode: -1,
 			StatusMsg:  "密码错误",
 		}
-		log.Println(resp.StatusMsg)
+		logger.Println(resp.StatusMsg)
 		return resp, nil
 	}
 	// 生成token
 	token, err := jwt.GenerateJWT(req.Username)
 	if err != nil {
-		log.Println(err)
 		resp = &user.UserLoginResponse{
 			StatusCode: -1,
 			StatusMsg:  "服务器错误",
 		}
-		log.Println(resp.StatusMsg, err)
+		logger.Println(resp.StatusMsg, err)
 		return resp, nil
 	}
 	resp = &user.UserLoginResponse{
@@ -132,45 +124,42 @@ func (s *UserServiceImpl) Login(ctx context.Context, req *user.UserLoginRequest)
 
 // UserInfo implements the UserServiceImpl interface.
 func (s *UserServiceImpl) UserInfo(ctx context.Context, req *user.UserInfoRequest) (resp *user.UserInfoResponse, err error) {
-	log.Println("userinfo getting...")
+	logger.Println("userinfo getting...")
 	// 检查用户是否存在
 	usr, err := db.GetUserByID(ctx, req.UserId)
 	if err != nil {
-		log.Println(err)
 		resp = &user.UserInfoResponse{
 			StatusCode: -1,
 			StatusMsg:  "服务器错误",
 		}
-		log.Println(resp.StatusMsg)
+		logger.Println(resp.StatusMsg)
 		return resp, nil
 	} else if usr == nil {
 		resp = &user.UserInfoResponse{
 			StatusCode: -1,
 			StatusMsg:  "用户不存在",
 		}
-		log.Println(resp.StatusMsg)
+		logger.Println(resp.StatusMsg)
 		return resp, nil
 	}
 	// 获取头像
 	avatar, err := minio.GetFileTemporaryURL(minio.AvatarBucketName, usr.Avatar)
 	if err != nil {
-		log.Println(err)
 		resp = &user.UserInfoResponse{
 			StatusCode: -1,
 			StatusMsg:  "服务器内部错误：获取头像失败",
 		}
-		log.Println(avatar, resp.StatusMsg)
+		logger.Println(avatar, resp.StatusMsg)
 		return resp, nil
 	}
 	// 获取背景
 	backgroundImage, err := minio.GetFileTemporaryURL(minio.BackgroundImageBucketName, usr.BackgroundImage)
 	if err != nil {
-		log.Println(err)
 		resp = &user.UserInfoResponse{
 			StatusCode: -1,
 			StatusMsg:  "服务器内部错误：获取背景图失败",
 		}
-		log.Println(backgroundImage, resp.StatusMsg)
+		logger.Println(backgroundImage, resp.StatusMsg)
 		return resp, nil
 	}
 

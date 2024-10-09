@@ -2,7 +2,6 @@ package handler
 
 import (
 	"context"
-	"log"
 	"net/http"
 	"strconv"
 	"tiktok/internal/response"
@@ -23,21 +22,21 @@ func InitUser() {
 	// 服务发现
 	resolver, err := etcd.NewEtcdResolver([]string{etcd_address})
 	if err != nil {
-		log.Fatal(err)
+		logger.Fatal(err)
 	}
 	c, err := userservice.NewClient("user", client.WithResolver(resolver))
 	if err != nil {
-		log.Fatal(err)
+		logger.Fatal(err)
 	}
 	userClient = c
-	log.Println("init user")
+	logger.Println("init user client")
 }
 
 // Register 注册
 func Register(ctx context.Context, c *app.RequestContext) {
 	username := c.Query("username")
 	password := c.Query("password")
-	log.Println("register", username)
+	logger.Println("register", username)
 	//校验参数
 	if len(username) == 0 || len(password) == 0 {
 		c.JSON(http.StatusBadRequest, response.Register{
@@ -49,7 +48,7 @@ func Register(ctx context.Context, c *app.RequestContext) {
 		return
 	}
 	if len(username) > 32 || len(password) > 32 {
-		c.JSON(http.StatusOK, response.Register{
+		c.JSON(http.StatusBadRequest, response.Register{
 			Base: response.Base{
 				StatusCode: -1,
 				StatusMsg:  "用户名或密码长度不能大于32个字符",
@@ -63,6 +62,16 @@ func Register(ctx context.Context, c *app.RequestContext) {
 		Password: password,
 	}
 	res, _ := userClient.Register(ctx, req)
+	if res == nil {
+		logger.Println("user无服务")
+		c.JSON(http.StatusOK, response.PublishAction{
+			Base: response.Base{
+				StatusCode: -1,
+				StatusMsg:  "无服务",
+			},
+		})
+		return
+	}
 	if res.StatusCode == -1 {
 		c.JSON(http.StatusOK, response.Register{
 			Base: response.Base{
@@ -86,7 +95,7 @@ func Register(ctx context.Context, c *app.RequestContext) {
 func Login(ctx context.Context, c *app.RequestContext) {
 	username := c.Query("username")
 	password := c.Query("password")
-	log.Println("login", username)
+	logger.Println("login", username)
 	//校验参数
 	if len(username) == 0 || len(password) == 0 {
 		c.JSON(http.StatusBadRequest, response.Login{
@@ -103,6 +112,16 @@ func Login(ctx context.Context, c *app.RequestContext) {
 		Password: password,
 	}
 	res, _ := userClient.Login(ctx, req)
+	if res == nil {
+		logger.Println("user无服务")
+		c.JSON(http.StatusOK, response.PublishAction{
+			Base: response.Base{
+				StatusCode: -1,
+				StatusMsg:  "无服务",
+			},
+		})
+		return
+	}
 	if res.StatusCode == -1 {
 		c.JSON(http.StatusOK, response.Login{
 			Base: response.Base{
@@ -125,10 +144,10 @@ func Login(ctx context.Context, c *app.RequestContext) {
 // UserInfo 用户信息
 func UserInfo(ctx context.Context, c *app.RequestContext) {
 	userId := c.Query("user_id")
-	log.Println("userInfo id", userId)
+	logger.Println("userInfo id", userId)
 	id, err := strconv.ParseInt(userId, 10, 64)
 	if err != nil {
-		c.JSON(http.StatusOK, response.UserInfo{
+		c.JSON(http.StatusBadRequest, response.UserInfo{
 			Base: response.Base{
 				StatusCode: -1,
 				StatusMsg:  "user_id 不合法",
@@ -137,12 +156,21 @@ func UserInfo(ctx context.Context, c *app.RequestContext) {
 		})
 		return
 	}
-
 	//调用kitex/kitex_gen
 	req := &user.UserInfoRequest{
 		UserId: id,
 	}
 	res, _ := userClient.UserInfo(ctx, req)
+	if res == nil {
+		logger.Println("user无服务")
+		c.JSON(http.StatusOK, response.PublishAction{
+			Base: response.Base{
+				StatusCode: -1,
+				StatusMsg:  "无服务",
+			},
+		})
+		return
+	}
 	if res.StatusCode == -1 {
 		c.JSON(http.StatusOK, response.UserInfo{
 			Base: response.Base{

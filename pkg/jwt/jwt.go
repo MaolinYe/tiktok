@@ -21,7 +21,7 @@ type Claims struct {
 
 // GenerateJWT生成JWT
 func GenerateJWT(username string) (string, error) {
-	expirationTime := time.Now().Add(5 * time.Minute) // 设置过期时间
+	expirationTime := time.Now().Add(10 * time.Minute) // 设置过期时间
 	claims := &Claims{
 		Username: username,
 		RegisteredClaims: jwt.RegisteredClaims{
@@ -30,7 +30,7 @@ func GenerateJWT(username string) (string, error) {
 		},
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	log.Println("new token")
+	log.Println("new token", token)
 	return token.SignedString(jwtKey) // 使用密钥签名JWT
 }
 
@@ -68,7 +68,7 @@ func AuthMiddleware(ctx context.Context, c *app.RequestContext) {
 		c.Abort()
 		return
 	}
-
+	log.Println("token pass")
 	// 将解析后的claims存储在上下文中，供后续使用
 	c.Set("username", claims.Username)
 	c.Next(ctx)

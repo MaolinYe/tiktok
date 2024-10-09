@@ -1,10 +1,9 @@
 package main
 
 import (
-	"log"
 	"net"
 	"tiktok/kitex/kitex_gen/user/userservice"
-	"tiktok/pkg/logger"
+	"tiktok/pkg/log"
 	"tiktok/pkg/viper"
 
 	"github.com/cloudwego/kitex/pkg/rpcinfo"
@@ -12,9 +11,9 @@ import (
 	etcd "github.com/kitex-contrib/registry-etcd"
 )
 
-func init() {
-	logger.InitLogger()
-}
+var (
+	logger = log.InitLogger("user")
+)
 
 func main() {
 	config := viper.InitConfig()
@@ -23,7 +22,7 @@ func main() {
 	// 服务注册
 	r, err := etcd.NewEtcdRegistry([]string{etcd_address})
 	if err != nil {
-		log.Fatal(err)
+		logger.Fatal(err)
 	}
 	addr, _ := net.ResolveTCPAddr("tcp", service_address)
 	svr := userservice.NewServer(new(UserServiceImpl),
@@ -35,6 +34,6 @@ func main() {
 	// 运行服务
 	err = svr.Run()
 	if err != nil {
-		log.Println(err.Error())
+		logger.Println(err.Error())
 	}
 }

@@ -1,0 +1,101 @@
+INFO: 2024/10/09 19:38:59 user.go:32: init user client
+INFO: 2024/10/09 19:38:59 video.go:37: init video client
+INFO: 2024/10/09 19:55:44 user.go:98: login dddd
+INFO: 2024/10/09 19:56:21 user.go:39: register yezi
+INFO: 2024/10/09 19:56:22 user.go:147: userInfo id 3
+INFO: 2024/10/09 19:56:22 video.go:85: publishList 3
+INFO: 2024/10/09 19:56:22 video.go:100: video无服务
+INFO: 2024/10/09 19:57:21 video.go:43: feed 1728475039986
+INFO: 2024/10/09 19:57:21 video.go:55: video无服务
+INFO: 2024/10/09 19:57:44 user.go:39: register 羊驼
+INFO: 2024/10/09 19:57:45 user.go:147: userInfo id 4
+INFO: 2024/10/09 19:57:45 video.go:85: publishList 4
+INFO: 2024/10/09 19:57:45 video.go:100: video无服务
+INFO: 2024/10/09 19:57:50 video.go:85: publishList 4
+INFO: 2024/10/09 19:57:50 video.go:100: video无服务
+INFO: 2024/10/09 19:58:01 video.go:85: publishList 4
+INFO: 2024/10/09 19:58:01 video.go:100: video无服务
+INFO: 2024/10/09 19:58:04 video.go:85: publishList 4
+INFO: 2024/10/09 19:58:04 video.go:100: video无服务
+[INFO] 2024/10/09 20:39:47 user.go:32: init user client
+[INFO] 2024/10/09 20:39:47 video.go:37: init video client
+[INFO] 2024/10/09 20:42:02 video.go:43: feed 1728477719481
+[INFO] 2024/10/09 20:43:38 video.go:43: feed 1728477817341
+[INFO] 2024/10/09 20:45:50 user.go:98: login yezi
+[INFO] 2024/10/09 20:45:50 user.go:147: userInfo id 3
+[INFO] 2024/10/09 20:45:51 video.go:85: publishList 3
+[INFO] 2024/10/09 20:53:29 video.go:43: feed 1728478408452
+[INFO] 2024/10/09 20:53:40 user.go:98: login yezi
+[INFO] 2024/10/09 20:53:41 user.go:147: userInfo id 3
+[INFO] 2024/10/09 20:53:42 video.go:85: publishList 3
+[INFO] 2024/10/09 20:57:13 video.go:85: publishList 3
+[INFO] 2024/10/09 20:57:19 video.go:85: publishList 3
+[INFO] 2024/10/09 20:57:34 video.go:85: publishList 3
+[INFO] 2024/10/09 20:57:37 video.go:43: feed 1728478655472
+[INFO] 2024/10/09 20:57:44 user.go:98: login yezi
+[INFO] 2024/10/09 20:57:44 user.go:147: userInfo id 3
+[INFO] 2024/10/09 20:57:45 video.go:85: publishList 3
+[INFO] 2024/10/09 21:10:08 video.go:43: feed 1728479407118
+[INFO] 2024/10/09 21:10:22 video.go:43: feed 1728479421216
+[INFO] 2024/10/09 21:10:30 user.go:98: login yezi
+[INFO] 2024/10/09 21:10:30 user.go:147: userInfo id 3
+[INFO] 2024/10/09 21:10:30 video.go:85: publishList 3
+[INFO] 2024/10/09 21:11:04 video.go:85: publishList 3
+[INFO] 2024/10/09 21:11:12 video.go:85: publishList 3
+[INFO] 2024/10/09 21:11:17 video.go:85: publishList 3
+[INFO] 2024/10/09 21:11:44 video.go:85: publishList 3
+[INFO] 2024/10/09 21:12:19 video.go:85: publishList 3
+[INFO] 2024/10/09 21:12:24 video.go:43: feed 1728479543526
+[INFO] 2024/10/09 21:12:24 video.go:43: feed 1728479543625
+[INFO] 2024/10/09 21:12:24 video.go:43: feed 1728479543846
+[INFO] 2024/10/09 21:12:33 video.go:43: feed 1728479552928
+[INFO] 2024/10/09 21:12:34 video.go:43: feed 1728479553090
+[INFO] 2024/10/09 21:12:34 video.go:43: feed 1728479553243
+[INFO] 2024/10/09 21:13:10 user.go:98: login yezi
+[INFO] 2024/10/09 21:13:10 user.go:147: userInfo id 3
+[INFO] 2024/10/09 21:13:10 video.go:85: publishList 3
+[INFO] 2024/10/09 21:13:37 video.go:85: publishList 3
+[INFO] 2024/10/09 21:13:43 video.go:43: feed 1728479621463
+[INFO] 2024/10/09 21:13:43 video.go:43: feed 1728479621834
+[INFO] 2024/10/09 21:13:48 video.go:43: feed 1728479622451
+[INFO] 2024/10/09 21:13:57 video.go:43: feed 1728479627627
+[INFO] 2024/10/09 21:15:09 video.go:43: feed 1728479708013
+[INFO] 2024/10/09 21:15:10 video.go:43: feed 1728479708795
+[INFO] 2024/10/09 21:16:06 user.go:98: login 羊驼
+[INFO] 2024/10/09 21:16:16 user.go:98: login 羊驼
+[INFO] 2024/10/09 21:16:16 user.go:147: userInfo id 4
+[INFO] 2024/10/09 21:16:17 video.go:85: publishList 4
+[INFO] 2024/10/09 21:17:05 video.go:85: publishList 4
+[INFO] 2024/10/09 21:17:12 video.go:43: feed 1728479709207
+[INFO] 2024/10/09 21:17:12 video.go:85: publishList 3
+[INFO] 2024/10/09 21:17:13 video.go:85: publishList 3
+[INFO] 2024/10/09 21:17:15 video.go:85: publishList 4
+[INFO] 2024/10/09 21:17:19 video.go:43: feed 1728479838313
+[INFO] 2024/10/09 21:17:20 video.go:43: feed 1728479838475
+[INFO] 2024/10/09 21:17:35 video.go:43: feed 1728479553331
+[INFO] 2024/10/09 21:17:35 video.go:85: publishList 3
+[INFO] 2024/10/09 21:17:36 video.go:43: feed 1728479854964
+[INFO] 2024/10/09 21:17:36 video.go:85: publishList 3
+[INFO] 2024/10/09 21:17:40 video.go:43: feed 1728479838906
+[INFO] 2024/10/09 21:17:47 video.go:43: feed 1728479856511
+[INFO] 2024/10/09 21:17:47 video.go:85: publishList 3
+[INFO] 2024/10/09 21:17:51 video.go:85: publishList 3
+[INFO] 2024/10/09 21:18:05 video.go:43: feed 1728479859505
+[INFO] 2024/10/09 21:24:30 video.go:43: feed 1728480268832
+[INFO] 2024/10/09 21:24:30 video.go:43: feed 1728480269427
+[INFO] 2024/10/09 21:24:39 user.go:98: login yezi
+[INFO] 2024/10/09 21:24:40 user.go:147: userInfo id 3
+[INFO] 2024/10/09 21:24:40 video.go:85: publishList 3
+[INFO] 2024/10/09 21:25:18 video.go:43: feed 1728480315944
+[INFO] 2024/10/09 21:25:19 video.go:43: feed 1728480316890
+[INFO] 2024/10/09 21:25:32 user.go:98: login 羊驼
+[INFO] 2024/10/09 21:25:32 user.go:147: userInfo id 4
+[INFO] 2024/10/09 21:25:32 video.go:85: publishList 4
+[INFO] 2024/10/09 21:25:50 video.go:43: feed 1728480318069
+[INFO] 2024/10/09 21:25:51 video.go:85: publishList 4
+[INFO] 2024/10/09 21:25:51 video.go:43: feed 1728480349811
+[INFO] 2024/10/09 21:25:52 video.go:85: publishList 4
+[INFO] 2024/10/09 21:25:57 video.go:43: feed 1728480350557
+[INFO] 2024/10/09 21:25:57 video.go:85: publishList 3
+[INFO] 2024/10/09 21:25:58 video.go:85: publishList 4
+[INFO] 2024/10/09 21:26:00 video.go:85: publishList 4
