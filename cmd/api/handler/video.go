@@ -75,6 +75,7 @@ func Feed(ctx context.Context, c *app.RequestContext) {
 			StatusCode: 0,
 			StatusMsg:  "success",
 		},
+		NextTime:  res.NextTime,
 		VideoList: res.VideoList,
 	})
 }

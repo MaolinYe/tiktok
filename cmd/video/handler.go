@@ -39,10 +39,15 @@ func (s *VideoServiceImpl) Feed(ctx context.Context, req *video.FeedRequest) (re
 		logger.Println(err)
 		return resp, nil
 	}
+	nextTime := time.Now().UnixMilli()
+	if len(videos) != 0 {
+		nextTime = videos[len(videos)-1].CreatedAt.UnixMilli()
+	}
 	resp = &video.FeedResponse{
 		StatusCode: 0,
 		StatusMsg:  "success",
 		VideoList:  list,
+		NextTime:   nextTime,
 	}
 	return resp, nil
 }
