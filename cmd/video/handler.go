@@ -29,8 +29,29 @@ func (s *VideoServiceImpl) Feed(ctx context.Context, req *video.FeedRequest) (re
 		logger.Println(resp.StatusMsg, err)
 		return resp, nil
 	}
+	var user_id int64
+	// 如果在登录状态获取用户id
+	if req.UserName != "" {
+		user, err := db.GetUserByUsername(ctx, req.UserName)
+		if err != nil {
+			resp = &video.FeedResponse{
+				StatusCode: -1,
+				StatusMsg:  "服务器错误",
+			}
+			logger.Println(resp.StatusMsg, err)
+			return resp, nil
+		} else if user == nil {
+			resp = &video.FeedResponse{
+				StatusCode: -1,
+				StatusMsg:  "用户不存在",
+			}
+			logger.Println(resp.StatusMsg)
+			return resp, nil
+		}
+		user_id = int64(user.ID)
+	}
 	// 构造视频信息返回
-	list, err := getVideoToResponse(ctx, videos)
+	list, err := getVideoToResponse(ctx, videos, user_id)
 	if err != nil {
 		resp = &video.FeedResponse{
 			StatusCode: -1,
@@ -155,7 +176,7 @@ func (s *VideoServiceImpl) PublishList(ctx context.Context, req *video.PublishLi
 		return resp, nil
 	}
 	// 构造视频信息返回
-	list, err := getVideoToResponse(ctx, videos)
+	list, err := getVideoToResponse(ctx, videos, req.UserId)
 	if err != nil {
 		resp = &video.PublishListResponse{
 			StatusCode: -1,
@@ -172,8 +193,7 @@ func (s *VideoServiceImpl) PublishList(ctx context.Context, req *video.PublishLi
 	return resp, nil
 }
 
-// from db to response
-func getVideoToResponse(ctx context.Context, videos []*db.Video) (list []*video.Video, err error) {
+func getVideoToResponse(ctx context.Context, videos []*db.Video, userID int64) (list []*video.Video, err error) {
 	for i := 0; i < len(videos); i++ {
 		// 获取作者
 		author, err := db.GetUserByID(ctx, int64(videos[i].AuthorID))
@@ -202,6 +222,11 @@ func getVideoToResponse(ctx context.Context, videos []*db.Video) (list []*video.
 		if err != nil {
 			return nil, errors.New("服务器内部错误：获取视频失败")
 		}
+		// 是否已点赞
+		isFavorite, err := db.IsFavorite(ctx, videos[i].ID, userID)
+		if err != nil {
+			return nil, errors.New("服务器内部错误")
+		}
 		list = append(list, &video.Video{
 			Id: int64(videos[i].ID),
 			Author: &user.User{
@@ -221,7 +246,7 @@ func getVideoToResponse(ctx context.Context, videos []*db.Video) (list []*video.
 			CoverUrl:      coverUrl,
 			FavoriteCount: int64(videos[i].FavoriteCount),
 			CommentCount:  int64(videos[i].CommentCount),
-			IsFavorite:    false,
+			IsFavorite:    isFavorite,
 			Title:         videos[i].Title,
 		})
 	}

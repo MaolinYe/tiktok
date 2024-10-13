@@ -13,4 +13,5 @@ var (
 func init() {
 	InitUser()
 	InitVideo()
+	InitFavor()
 }

@@ -6,7 +6,7 @@ etcd:
   address: 127.0.0.1:2379
 
 minio:
-  endpoint: 172.24.204.230:9000
+  endpoint: 172.29.22.103:9000
   accessKey: miniokey
   secretKey: miniokey
   useSSL: false
@@ -30,9 +30,19 @@ mysql:
     port: 3308
     dbname: tiktok
 
+redis:
+  address: "localhost:6379"
+  password: ""
+  expireTime: 2 # minute 键过期时间
+  syncTime: 1 # minute 同步MySQL时间，一定要小于过期时间
+  favorDB: 0 # favor数据库
+  commentDB: 1 # comment数据库
+
 service:
   user:
     address: 127.0.0.1:9001
   video:
     address: 127.0.0.1:9002
     limit: 2 # 每次feed的视频数量
+  favor:
+    address: 127.0.0.1:9003

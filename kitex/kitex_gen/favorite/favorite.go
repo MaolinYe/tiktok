@@ -11,9 +11,9 @@ import (
 )
 
 type FavoriteActionRequest struct {
-	UserId     int64 `thrift:"user_id,1" frugal:"1,default,i64" json:"user_id"`
-	VideoId    int64 `thrift:"video_id,2" frugal:"2,default,i64" json:"video_id"`
-	ActionType int32 `thrift:"action_type,3" frugal:"3,default,i32" json:"action_type"`
+	UserName   string `thrift:"user_name,1" frugal:"1,default,string" json:"user_name"`
+	VideoId    int64  `thrift:"video_id,2" frugal:"2,default,i64" json:"video_id"`
+	ActionType int32  `thrift:"action_type,3" frugal:"3,default,i32" json:"action_type"`
 }
 
 func NewFavoriteActionRequest() *FavoriteActionRequest {
@@ -23,8 +23,8 @@ func NewFavoriteActionRequest() *FavoriteActionRequest {
 func (p *FavoriteActionRequest) InitDefault() {
 }
 
-func (p *FavoriteActionRequest) GetUserId() (v int64) {
-	return p.UserId
+func (p *FavoriteActionRequest) GetUserName() (v string) {
+	return p.UserName
 }
 
 func (p *FavoriteActionRequest) GetVideoId() (v int64) {
@@ -34,8 +34,8 @@ func (p *FavoriteActionRequest) GetVideoId() (v int64) {
 func (p *FavoriteActionRequest) GetActionType() (v int32) {
 	return p.ActionType
 }
-func (p *FavoriteActionRequest) SetUserId(val int64) {
-	p.UserId = val
+func (p *FavoriteActionRequest) SetUserName(val string) {
+	p.UserName = val
 }
 func (p *FavoriteActionRequest) SetVideoId(val int64) {
 	p.VideoId = val
@@ -45,7 +45,7 @@ func (p *FavoriteActionRequest) SetActionType(val int32) {
 }
 
 var fieldIDToName_FavoriteActionRequest = map[int16]string{
-	1: "user_id",
+	1: "user_name",
 	2: "video_id",
 	3: "action_type",
 }
@@ -70,7 +70,7 @@ func (p *FavoriteActionRequest) Read(iprot thrift.TProtocol) (err error) {
 
 		switch fieldId {
 		case 1:
-			if fieldTypeId == thrift.I64 {
+			if fieldTypeId == thrift.STRING {
 				if err = p.ReadField1(iprot); err != nil {
 					goto ReadFieldError
 				}
@@ -124,13 +124,13 @@ ReadStructEndError:
 
 func (p *FavoriteActionRequest) ReadField1(iprot thrift.TProtocol) error {
 
-	var _field int64
-	if v, err := iprot.ReadI64(); err != nil {
+	var _field string
+	if v, err := iprot.ReadString(); err != nil {
 		return err
 	} else {
 		_field = v
 	}
-	p.UserId = _field
+	p.UserName = _field
 	return nil
 }
 func (p *FavoriteActionRequest) ReadField2(iprot thrift.TProtocol) error {
@@ -193,10 +193,10 @@ WriteStructEndError:
 }
 
 func (p *FavoriteActionRequest) writeField1(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("user_id", thrift.I64, 1); err != nil {
+	if err = oprot.WriteFieldBegin("user_name", thrift.STRING, 1); err != nil {
 		goto WriteFieldBeginError
 	}
-	if err := oprot.WriteI64(p.UserId); err != nil {
+	if err := oprot.WriteString(p.UserName); err != nil {
 		return err
 	}
 	if err = oprot.WriteFieldEnd(); err != nil {
@@ -257,7 +257,7 @@ func (p *FavoriteActionRequest) DeepEqual(ano *FavoriteActionRequest) bool {
 	} else if p == nil || ano == nil {
 		return false
 	}
-	if !p.Field1DeepEqual(ano.UserId) {
+	if !p.Field1DeepEqual(ano.UserName) {
 		return false
 	}
 	if !p.Field2DeepEqual(ano.VideoId) {
@@ -269,9 +269,9 @@ func (p *FavoriteActionRequest) DeepEqual(ano *FavoriteActionRequest) bool {
 	return true
 }
 
-func (p *FavoriteActionRequest) Field1DeepEqual(src int64) bool {
+func (p *FavoriteActionRequest) Field1DeepEqual(src string) bool {
 
-	if p.UserId != src {
+	if strings.Compare(p.UserName, src) != 0 {
 		return false
 	}
 	return true

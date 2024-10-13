@@ -47,8 +47,20 @@ func Feed(ctx context.Context, c *app.RequestContext) {
 	} else {
 		timestamp = time.Now().UnixMilli()
 	}
+	var user_name string
+	// 如果携带token
+	token := c.Query("token")
+	if token != "" {
+		claims, err := jwt.ValidateJWT(token)
+		if err != nil {
+			c.JSON(http.StatusOK, "Invalid token")
+			return
+		}
+		user_name = claims.Username
+	}
 	req := &video.FeedRequest{
 		LatestTime: timestamp,
+		UserName:   user_name,
 	}
 	res, _ := videoClient.Feed(ctx, req)
 	if res == nil {

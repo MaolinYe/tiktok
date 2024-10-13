@@ -38,10 +38,10 @@ func init() {
 		Sources:           []gorm.Dialector{mysql.Open(dsn_source)},
 		Replicas:          []gorm.Dialector{mysql.Open(dsn_replica)},
 		Policy:            dbresolver.RandomPolicy{},
-		TraceResolverMode: false,                         // 不记录数据库切换信息
+		TraceResolverMode: false, // 不记录数据库切换信息
 	}))
 	// 自动迁移
-	if err = db.AutoMigrate(&User{}, &Video{}); err != nil {
+	if err = db.AutoMigrate(&User{}, &Video{}, &Favor{}); err != nil {
 		log.Println(err)
 	}
 	log.Println("database connected")

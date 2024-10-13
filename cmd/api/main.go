@@ -34,5 +34,10 @@ func registerGroup(hz *server.Hertz) {
 			publish.POST("/action/", jwt.AuthMiddleware, handler.PublishAction)
 		}
 		douyin.GET("/feed", handler.Feed)
+		favor := douyin.Group("/favorite")
+		{
+			favor.GET("/list/", jwt.AuthMiddleware, handler.FavoriteList)
+			favor.POST("/action/", jwt.AuthMiddleware, handler.FavoriteAction)
+		}
 	}
 }

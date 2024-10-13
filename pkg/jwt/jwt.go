@@ -55,7 +55,7 @@ func AuthMiddleware(ctx context.Context, c *app.RequestContext) {
 		token = c.PostForm("token")
 	}
 	if token == "" {
-		c.JSON(http.StatusUnauthorized, "Missing token")
+		c.JSON(http.StatusBadRequest, "Missing token")
 		log.Println("Missing token")
 		c.Abort()
 		return
@@ -63,7 +63,7 @@ func AuthMiddleware(ctx context.Context, c *app.RequestContext) {
 
 	claims, err := ValidateJWT(token)
 	if err != nil {
-		c.JSON(http.StatusUnauthorized, "Invalid token")
+		c.JSON(http.StatusOK, "Invalid token")
 		log.Println("Invalid token", err)
 		c.Abort()
 		return

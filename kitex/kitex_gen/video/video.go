@@ -653,7 +653,8 @@ func (p *Video) Field9DeepEqual(src int64) bool {
 }
 
 type FeedRequest struct {
-	LatestTime int64 `thrift:"latest_time,1" frugal:"1,default,i64" json:"latest_time"`
+	LatestTime int64  `thrift:"latest_time,1" frugal:"1,default,i64" json:"latest_time"`
+	UserName   string `thrift:"user_name,2" frugal:"2,default,string" json:"user_name"`
 }
 
 func NewFeedRequest() *FeedRequest {
@@ -666,12 +667,20 @@ func (p *FeedRequest) InitDefault() {
 func (p *FeedRequest) GetLatestTime() (v int64) {
 	return p.LatestTime
 }
+
+func (p *FeedRequest) GetUserName() (v string) {
+	return p.UserName
+}
 func (p *FeedRequest) SetLatestTime(val int64) {
 	p.LatestTime = val
+}
+func (p *FeedRequest) SetUserName(val string) {
+	p.UserName = val
 }
 
 var fieldIDToName_FeedRequest = map[int16]string{
 	1: "latest_time",
+	2: "user_name",
 }
 
 func (p *FeedRequest) Read(iprot thrift.TProtocol) (err error) {
@@ -696,6 +705,14 @@ func (p *FeedRequest) Read(iprot thrift.TProtocol) (err error) {
 		case 1:
 			if fieldTypeId == thrift.I64 {
 				if err = p.ReadField1(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		case 2:
+			if fieldTypeId == thrift.STRING {
+				if err = p.ReadField2(iprot); err != nil {
 					goto ReadFieldError
 				}
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
@@ -741,6 +758,17 @@ func (p *FeedRequest) ReadField1(iprot thrift.TProtocol) error {
 	p.LatestTime = _field
 	return nil
 }
+func (p *FeedRequest) ReadField2(iprot thrift.TProtocol) error {
+
+	var _field string
+	if v, err := iprot.ReadString(); err != nil {
+		return err
+	} else {
+		_field = v
+	}
+	p.UserName = _field
+	return nil
+}
 
 func (p *FeedRequest) Write(oprot thrift.TProtocol) (err error) {
 	var fieldId int16
@@ -750,6 +778,10 @@ func (p *FeedRequest) Write(oprot thrift.TProtocol) (err error) {
 	if p != nil {
 		if err = p.writeField1(oprot); err != nil {
 			fieldId = 1
+			goto WriteFieldError
+		}
+		if err = p.writeField2(oprot); err != nil {
+			fieldId = 2
 			goto WriteFieldError
 		}
 	}
@@ -787,6 +819,23 @@ WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 1 end error: ", p), err)
 }
 
+func (p *FeedRequest) writeField2(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("user_name", thrift.STRING, 2); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteString(p.UserName); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 2 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 2 end error: ", p), err)
+}
+
 func (p *FeedRequest) String() string {
 	if p == nil {
 		return "<nil>"
@@ -804,12 +853,22 @@ func (p *FeedRequest) DeepEqual(ano *FeedRequest) bool {
 	if !p.Field1DeepEqual(ano.LatestTime) {
 		return false
 	}
+	if !p.Field2DeepEqual(ano.UserName) {
+		return false
+	}
 	return true
 }
 
 func (p *FeedRequest) Field1DeepEqual(src int64) bool {
 
 	if p.LatestTime != src {
+		return false
+	}
+	return true
+}
+func (p *FeedRequest) Field2DeepEqual(src string) bool {
+
+	if strings.Compare(p.UserName, src) != 0 {
 		return false
 	}
 	return true

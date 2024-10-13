@@ -5,7 +5,7 @@ include "video.thrift"
 
 // 点赞or取消点赞
 struct FavoriteActionRequest {
-  1: i64 user_id,      // 用户id
+  1: string user_name     // 用户名
   2: i64 video_id,     // 视频id
   3: i32 action_type   // 1-点赞，2-取消点赞
 }
