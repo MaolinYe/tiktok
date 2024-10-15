@@ -58,3 +58,9 @@ func GetFeed(ctx context.Context, limit int, lastestTime int64) (list []*Video, 
 	}
 	return
 }
+
+// 根据视频id获取视频
+func GetVideoByID(ctx context.Context, videoID int64) (video *Video, err error) {
+	err = db.Clauses(dbresolver.Read).WithContext(ctx).First(&video, video).Error
+	return
+}

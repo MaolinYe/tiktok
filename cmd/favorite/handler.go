@@ -84,7 +84,7 @@ func (s *FavoriteServiceImpl) FavoriteAction(ctx context.Context, req *favorite.
 // FavoriteList implements the FavoriteServiceImpl interface.
 func (s *FavoriteServiceImpl) FavoriteList(ctx context.Context, req *favorite.FavoriteListRequest) (resp *favorite.FavoriteListResponse, err error) {
 	logger.Println("favorite list getting...")
-	// 获取用户视频发布列表
+	// 获取用户点赞视频列表
 	videos, err := db.GetFavorList(ctx, req.UserId)
 	if err != nil {
 		resp = &favorite.FavoriteListResponse{

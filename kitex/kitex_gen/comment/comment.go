@@ -15,6 +15,7 @@ type CommentActionRequest struct {
 	ActionType  int32  `thrift:"action_type,2" frugal:"2,default,i32" json:"action_type"`
 	CommentText string `thrift:"comment_text,3" frugal:"3,default,string" json:"comment_text"`
 	CommentId   int64  `thrift:"comment_id,4" frugal:"4,default,i64" json:"comment_id"`
+	UserName    string `thrift:"user_name,5" frugal:"5,default,string" json:"user_name"`
 }
 
 func NewCommentActionRequest() *CommentActionRequest {
@@ -39,6 +40,10 @@ func (p *CommentActionRequest) GetCommentText() (v string) {
 func (p *CommentActionRequest) GetCommentId() (v int64) {
 	return p.CommentId
 }
+
+func (p *CommentActionRequest) GetUserName() (v string) {
+	return p.UserName
+}
 func (p *CommentActionRequest) SetVideoId(val int64) {
 	p.VideoId = val
 }
@@ -51,12 +56,16 @@ func (p *CommentActionRequest) SetCommentText(val string) {
 func (p *CommentActionRequest) SetCommentId(val int64) {
 	p.CommentId = val
 }
+func (p *CommentActionRequest) SetUserName(val string) {
+	p.UserName = val
+}
 
 var fieldIDToName_CommentActionRequest = map[int16]string{
 	1: "video_id",
 	2: "action_type",
 	3: "comment_text",
 	4: "comment_id",
+	5: "user_name",
 }
 
 func (p *CommentActionRequest) Read(iprot thrift.TProtocol) (err error) {
@@ -105,6 +114,14 @@ func (p *CommentActionRequest) Read(iprot thrift.TProtocol) (err error) {
 		case 4:
 			if fieldTypeId == thrift.I64 {
 				if err = p.ReadField4(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		case 5:
+			if fieldTypeId == thrift.STRING {
+				if err = p.ReadField5(iprot); err != nil {
 					goto ReadFieldError
 				}
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
@@ -183,6 +200,17 @@ func (p *CommentActionRequest) ReadField4(iprot thrift.TProtocol) error {
 	p.CommentId = _field
 	return nil
 }
+func (p *CommentActionRequest) ReadField5(iprot thrift.TProtocol) error {
+
+	var _field string
+	if v, err := iprot.ReadString(); err != nil {
+		return err
+	} else {
+		_field = v
+	}
+	p.UserName = _field
+	return nil
+}
 
 func (p *CommentActionRequest) Write(oprot thrift.TProtocol) (err error) {
 	var fieldId int16
@@ -204,6 +232,10 @@ func (p *CommentActionRequest) Write(oprot thrift.TProtocol) (err error) {
 		}
 		if err = p.writeField4(oprot); err != nil {
 			fieldId = 4
+			goto WriteFieldError
+		}
+		if err = p.writeField5(oprot); err != nil {
+			fieldId = 5
 			goto WriteFieldError
 		}
 	}
@@ -292,6 +324,23 @@ WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 4 end error: ", p), err)
 }
 
+func (p *CommentActionRequest) writeField5(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("user_name", thrift.STRING, 5); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := oprot.WriteString(p.UserName); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 5 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 5 end error: ", p), err)
+}
+
 func (p *CommentActionRequest) String() string {
 	if p == nil {
 		return "<nil>"
@@ -316,6 +365,9 @@ func (p *CommentActionRequest) DeepEqual(ano *CommentActionRequest) bool {
 		return false
 	}
 	if !p.Field4DeepEqual(ano.CommentId) {
+		return false
+	}
+	if !p.Field5DeepEqual(ano.UserName) {
 		return false
 	}
 	return true
@@ -345,6 +397,13 @@ func (p *CommentActionRequest) Field3DeepEqual(src string) bool {
 func (p *CommentActionRequest) Field4DeepEqual(src int64) bool {
 
 	if p.CommentId != src {
+		return false
+	}
+	return true
+}
+func (p *CommentActionRequest) Field5DeepEqual(src string) bool {
+
+	if strings.Compare(p.UserName, src) != 0 {
 		return false
 	}
 	return true
@@ -642,8 +701,6 @@ type Comment struct {
 	User       *user.User `thrift:"user,2" frugal:"2,default,user.User" json:"user"`
 	Content    string     `thrift:"content,3" frugal:"3,default,string" json:"content"`
 	CreateDate string     `thrift:"create_date,4" frugal:"4,default,string" json:"create_date"`
-	LikeCount  int64      `thrift:"like_count,5" frugal:"5,default,i64" json:"like_count"`
-	TeaseCount int64      `thrift:"tease_count,6" frugal:"6,default,i64" json:"tease_count"`
 }
 
 func NewComment() *Comment {
@@ -673,14 +730,6 @@ func (p *Comment) GetContent() (v string) {
 func (p *Comment) GetCreateDate() (v string) {
 	return p.CreateDate
 }
-
-func (p *Comment) GetLikeCount() (v int64) {
-	return p.LikeCount
-}
-
-func (p *Comment) GetTeaseCount() (v int64) {
-	return p.TeaseCount
-}
 func (p *Comment) SetId(val int64) {
 	p.Id = val
 }
@@ -693,20 +742,12 @@ func (p *Comment) SetContent(val string) {
 func (p *Comment) SetCreateDate(val string) {
 	p.CreateDate = val
 }
-func (p *Comment) SetLikeCount(val int64) {
-	p.LikeCount = val
-}
-func (p *Comment) SetTeaseCount(val int64) {
-	p.TeaseCount = val
-}
 
 var fieldIDToName_Comment = map[int16]string{
 	1: "id",
 	2: "user",
 	3: "content",
 	4: "create_date",
-	5: "like_count",
-	6: "tease_count",
 }
 
 func (p *Comment) IsSetUser() bool {
@@ -759,22 +800,6 @@ func (p *Comment) Read(iprot thrift.TProtocol) (err error) {
 		case 4:
 			if fieldTypeId == thrift.STRING {
 				if err = p.ReadField4(iprot); err != nil {
-					goto ReadFieldError
-				}
-			} else if err = iprot.Skip(fieldTypeId); err != nil {
-				goto SkipFieldError
-			}
-		case 5:
-			if fieldTypeId == thrift.I64 {
-				if err = p.ReadField5(iprot); err != nil {
-					goto ReadFieldError
-				}
-			} else if err = iprot.Skip(fieldTypeId); err != nil {
-				goto SkipFieldError
-			}
-		case 6:
-			if fieldTypeId == thrift.I64 {
-				if err = p.ReadField6(iprot); err != nil {
 					goto ReadFieldError
 				}
 			} else if err = iprot.Skip(fieldTypeId); err != nil {
@@ -850,28 +875,6 @@ func (p *Comment) ReadField4(iprot thrift.TProtocol) error {
 	p.CreateDate = _field
 	return nil
 }
-func (p *Comment) ReadField5(iprot thrift.TProtocol) error {
-
-	var _field int64
-	if v, err := iprot.ReadI64(); err != nil {
-		return err
-	} else {
-		_field = v
-	}
-	p.LikeCount = _field
-	return nil
-}
-func (p *Comment) ReadField6(iprot thrift.TProtocol) error {
-
-	var _field int64
-	if v, err := iprot.ReadI64(); err != nil {
-		return err
-	} else {
-		_field = v
-	}
-	p.TeaseCount = _field
-	return nil
-}
 
 func (p *Comment) Write(oprot thrift.TProtocol) (err error) {
 	var fieldId int16
@@ -893,14 +896,6 @@ func (p *Comment) Write(oprot thrift.TProtocol) (err error) {
 		}
 		if err = p.writeField4(oprot); err != nil {
 			fieldId = 4
-			goto WriteFieldError
-		}
-		if err = p.writeField5(oprot); err != nil {
-			fieldId = 5
-			goto WriteFieldError
-		}
-		if err = p.writeField6(oprot); err != nil {
-			fieldId = 6
 			goto WriteFieldError
 		}
 	}
@@ -989,40 +984,6 @@ WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 4 end error: ", p), err)
 }
 
-func (p *Comment) writeField5(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("like_count", thrift.I64, 5); err != nil {
-		goto WriteFieldBeginError
-	}
-	if err := oprot.WriteI64(p.LikeCount); err != nil {
-		return err
-	}
-	if err = oprot.WriteFieldEnd(); err != nil {
-		goto WriteFieldEndError
-	}
-	return nil
-WriteFieldBeginError:
-	return thrift.PrependError(fmt.Sprintf("%T write field 5 begin error: ", p), err)
-WriteFieldEndError:
-	return thrift.PrependError(fmt.Sprintf("%T write field 5 end error: ", p), err)
-}
-
-func (p *Comment) writeField6(oprot thrift.TProtocol) (err error) {
-	if err = oprot.WriteFieldBegin("tease_count", thrift.I64, 6); err != nil {
-		goto WriteFieldBeginError
-	}
-	if err := oprot.WriteI64(p.TeaseCount); err != nil {
-		return err
-	}
-	if err = oprot.WriteFieldEnd(); err != nil {
-		goto WriteFieldEndError
-	}
-	return nil
-WriteFieldBeginError:
-	return thrift.PrependError(fmt.Sprintf("%T write field 6 begin error: ", p), err)
-WriteFieldEndError:
-	return thrift.PrependError(fmt.Sprintf("%T write field 6 end error: ", p), err)
-}
-
 func (p *Comment) String() string {
 	if p == nil {
 		return "<nil>"
@@ -1047,12 +1008,6 @@ func (p *Comment) DeepEqual(ano *Comment) bool {
 		return false
 	}
 	if !p.Field4DeepEqual(ano.CreateDate) {
-		return false
-	}
-	if !p.Field5DeepEqual(ano.LikeCount) {
-		return false
-	}
-	if !p.Field6DeepEqual(ano.TeaseCount) {
 		return false
 	}
 	return true
@@ -1082,20 +1037,6 @@ func (p *Comment) Field3DeepEqual(src string) bool {
 func (p *Comment) Field4DeepEqual(src string) bool {
 
 	if strings.Compare(p.CreateDate, src) != 0 {
-		return false
-	}
-	return true
-}
-func (p *Comment) Field5DeepEqual(src int64) bool {
-
-	if p.LikeCount != src {
-		return false
-	}
-	return true
-}
-func (p *Comment) Field6DeepEqual(src int64) bool {
-
-	if p.TeaseCount != src {
 		return false
 	}
 	return true

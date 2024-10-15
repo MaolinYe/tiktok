@@ -41,7 +41,7 @@ func init() {
 		TraceResolverMode: false, // 不记录数据库切换信息
 	}))
 	// 自动迁移
-	if err = db.AutoMigrate(&User{}, &Video{}, &Favor{}); err != nil {
+	if err = db.AutoMigrate(&User{}, &Video{}, &Favor{}, &Comment{}); err != nil {
 		log.Println(err)
 	}
 	log.Println("database connected")

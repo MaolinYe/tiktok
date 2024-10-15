@@ -46,3 +46,5 @@ service:
     limit: 2 # 每次feed的视频数量
   favor:
     address: 127.0.0.1:9003
+  comment:
+    address: 127.0.0.1:9004
