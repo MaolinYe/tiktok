@@ -2,12 +2,16 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"tiktok/dal/db"
 	"tiktok/dal/redis"
 	"tiktok/kitex/kitex_gen/comment"
 	"tiktok/kitex/kitex_gen/user"
 	"tiktok/pkg/minio"
+	"time"
+
+	"github.com/streadway/amqp"
 )
 
 // CommentServiceImpl implements the last service interface defined in the IDL.
@@ -37,7 +41,8 @@ func (s *CommentServiceImpl) CommentAction(ctx context.Context, req *comment.Com
 		logger.Println("commenting...", req.VideoId)
 		remark := &db.Comment{VideoID: uint(req.VideoId), UserID: user.ID, Content: req.CommentText}
 		// 创建评论记录
-		if err = db.CreateComment(ctx, remark); err != nil {
+		msg, err := json.Marshal(remark)
+		if err != nil {
 			resp = &comment.CommentActionResponse{
 				StatusCode: -1,
 				StatusMsg:  "服务器错误",
@@ -45,6 +50,7 @@ func (s *CommentServiceImpl) CommentAction(ctx context.Context, req *comment.Com
 			logger.Println(resp.StatusMsg, err)
 			return resp, nil
 		}
+		mq.PublishSimple(msg)
 		// 更新视频评论数
 		if err = redis.CommentVideo(ctx, req.VideoId); err != nil {
 			resp = &comment.CommentActionResponse{
@@ -71,7 +77,7 @@ func (s *CommentServiceImpl) CommentAction(ctx context.Context, req *comment.Com
 				Id:         int64(remark.ID),
 				User:       author,
 				Content:    remark.Content,
-				CreateDate: remark.CreatedAt.Format("2006-01-02 15:04:05"),
+				CreateDate: time.Now().Format("2006-01-02 15:04:05"),
 			},
 		}
 		return resp, nil
@@ -203,4 +209,18 @@ func getAuthorData(ctx context.Context, authorID int64) (data *user.User, err er
 		FavoriteCount:   int64(author.FavoriteCount),
 	}
 	return
+}
+
+func consume(msgs <-chan amqp.Delivery) {
+	for msg := range msgs {
+		comment := new(db.Comment)
+		if err := json.Unmarshal(msg.Body, comment); err != nil {
+			logger.Println(err)
+			continue
+		}
+		if err := db.CreateComment(context.Background(), comment); err != nil {
+			logger.Println(err)
+			continue
+		}
+	}
 }

@@ -15,5 +15,5 @@ func InitLogger(logName string) *log.Logger {
 	// 创建一个多写入器，将日志写入文件和标准输出
 	multiWriter := io.MultiWriter(logFile, os.Stdout)
 	// 设置日志输出为多写入器
-	return log.New(multiWriter, "[INFO] ", log.Ldate|log.Ltime|log.Lshortfile)
+	return log.New(multiWriter, "[INFO] ", log.Ldate|log.Ltime|log.Llongfile)
 }

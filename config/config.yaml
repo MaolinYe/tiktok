@@ -5,6 +5,17 @@ api:
 etcd:
   address: 127.0.0.1:2379
 
+service:
+  user:
+    address: 127.0.0.1:9001
+  video:
+    address: 127.0.0.1:9002
+    limit: 2 # 每次feed的视频数量
+  favor:
+    address: 127.0.0.1:9003
+  comment:
+    address: 127.0.0.1:9004
+
 minio:
   endpoint: 172.29.22.103:9000
   accessKey: miniokey
@@ -38,13 +49,5 @@ redis:
   favorDB: 0 # favor数据库
   commentDB: 1 # comment数据库
 
-service:
-  user:
-    address: 127.0.0.1:9001
-  video:
-    address: 127.0.0.1:9002
-    limit: 2 # 每次feed的视频数量
-  favor:
-    address: 127.0.0.1:9003
-  comment:
-    address: 127.0.0.1:9004
+rabbitmq:
+  url: "amqp://guest:guest@localhost:5672/"

@@ -43,7 +43,7 @@ func GetCommentCount(ctx context.Context, videoID int64) (uint, error) {
 // 获取评论列表
 func GetCommentList(ctx context.Context, videoID int64) (comments []*Comment, err error) {
 	if err = db.Clauses(dbresolver.Read).WithContext(ctx).Where("video_id = ?", videoID).
-		Find(&comments).Error; err != nil {
+		Order("created_at desc").Find(&comments).Error; err != nil {
 		return nil, err
 	}
 	return

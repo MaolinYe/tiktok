@@ -7,6 +7,7 @@ import (
 	"tiktok/dal/redis"
 	"tiktok/kitex/kitex_gen/favorite/favoriteservice"
 	"tiktok/pkg/log"
+	"tiktok/pkg/rabbitmq"
 	"tiktok/pkg/viper"
 
 	"github.com/cloudwego/kitex/pkg/rpcinfo"
@@ -18,6 +19,7 @@ import (
 var (
 	logger = log.InitLogger("favor")
 	config = viper.InitConfig()
+	mq     = rabbitmq.NewRabbitMQSimple("favor")
 )
 
 func main() {
@@ -42,6 +44,8 @@ func main() {
 		redis.SyncFavorToMySQL(context.Background())
 	})
 	c.Start()
+	// 启动消费
+	go consume(mq.ConsumeSimple())
 	// 运行服务
 	err = svr.Run()
 	if err != nil {

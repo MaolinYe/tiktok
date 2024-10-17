@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"tiktok/dal/db"
 	"tiktok/dal/redis"
@@ -9,6 +10,8 @@ import (
 	"tiktok/kitex/kitex_gen/user"
 	"tiktok/kitex/kitex_gen/video"
 	"tiktok/pkg/minio"
+
+	"github.com/streadway/amqp"
 )
 
 // FavoriteServiceImpl implements the last service interface defined in the IDL.
@@ -37,7 +40,8 @@ func (s *FavoriteServiceImpl) FavoriteAction(ctx context.Context, req *favorite.
 	favor := &db.Favor{VideoID: uint(req.VideoId), UserID: uint(user.ID)}
 	if req.ActionType == 1 { // 点赞
 		// 创建点赞记录
-		if err := db.CreateFavor(ctx, favor); err != nil {
+		msg, err := json.Marshal(favor)
+		if err != nil {
 			resp = &favorite.FavoriteActionResponse{
 				StatusCode: -1,
 				StatusMsg:  "服务器错误",
@@ -45,6 +49,7 @@ func (s *FavoriteServiceImpl) FavoriteAction(ctx context.Context, req *favorite.
 			logger.Println(resp.StatusMsg, err)
 			return resp, nil
 		}
+		mq.PublishSimple(msg)
 		// 更新点赞数
 		if err := redis.FavorVideo(ctx, int64(favor.VideoID)); err != nil {
 			resp = &favorite.FavoriteActionResponse{
@@ -171,4 +176,18 @@ func getVideoToResponse(ctx context.Context, videos []*db.Video, userID int64) (
 		})
 	}
 	return list, nil
+}
+
+func consume(msgs <-chan amqp.Delivery) {
+	for msg := range msgs {
+		favor := new(db.Favor)
+		if err := json.Unmarshal(msg.Body, favor); err != nil {
+			logger.Println(err)
+			continue
+		}
+		if err := db.CreateFavor(context.Background(), favor); err != nil {
+			logger.Println(err)
+			continue
+		}
+	}
 }

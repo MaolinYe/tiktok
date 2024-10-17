@@ -1,12 +1,14 @@
 # tiktok
 
-【抖声短视频】【极简版抖音】功能：用户注册登录、推送视频、投稿视频、点赞视频、评论视频；查看用户信息：投稿列表、点赞列表；查看视频信息：标题、作者、是否已点赞、点赞数、评论数、评论列表
+【抖声短视频】【极简版抖音】功能：用户注册登录、推送视频、投稿视频、点赞视频、评论视频、取消点赞、删除评论；查看用户信息：投稿列表、点赞列表；查看视频信息：标题、作者、是否已点赞、点赞数、评论数、评论列表
 
 采用kitex微服务架构，使用hertz接收HTTP请求，由jwt中间件进行鉴权，rpc客户端进行参数检验，rpc服务端调用dal层的gorm进行业务处理
 
-使用thrift作为rpc通信协议，使用etcd进行rpc服务注册与发现，使用minio存储资源提供限时访问url，使用viper读取配置文件，使用bcrypt加密用户密码
+设置MySQL主从数据库，读写分离，写主库，读分发从库，使用redis更新点赞数和评论数，定时同步MySQL
 
-设置MySQL主从数据库，读写分离，写主库，读分发从库，使用redis更新点赞数，定时同步MySQL
+使用消息队列rabbitmq进行流量削峰，将高并发的数据库新增评论点赞记录请求排队处理
+
+使用thrift作为rpc通信协议，使用etcd进行rpc服务注册与发现，使用minio存储资源提供限时访问url，使用viper读取配置文件，使用bcrypt加密用户密码，使用log写入日志
 
 ## 架构
 
@@ -76,6 +78,10 @@ JSON Web Token，签名加密的json对象
 
 存储更新频繁的点赞和评论
 
+### rabbitmq
+
+流量削峰
+
 ### minio
 
 存储对象，提供限时访问url
@@ -93,6 +99,8 @@ JSON Web Token，签名加密的json对象
 获取视频封面
 
 ### 数据库
+
+![1728978368971](image/README/1728978368971.png)
 
 #### 读写分离
 
@@ -167,7 +175,21 @@ db,err:=open
 
 启动etcd
 
+```powershell
+.\etcd.exe
+```
+
 启动redis数据库
+
+```powershell
+.\redis-server.exe
+```
+
+启动rabbitmq
+
+```powershell
+.\rabbitmq-server.bat
+```
 
 配置minio访问地址，启动minio
 
